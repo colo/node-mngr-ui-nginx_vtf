@@ -138,7 +138,7 @@ export default {
 							items,
 							total
 						})
-					}, 2000)
+					}, 10000)
 					
 				})
 				
@@ -153,11 +153,14 @@ export default {
 				
 				
 				//get all vhosts
-				this.$http.get('http://localhost:8081/nginx/vhosts', {
+				this.$http.get('http://localhost:8081/nginx/vhosts/?first=10', {
 					headers : { "Content-Type": "application/json", "Accept": "application/json" },
 				}).then(function(res){
 					
 					const uris = res.body
+					
+					//console.log(uris)
+					
 					var total = uris.length
 					
 					//get enabled vhosts
@@ -167,14 +170,21 @@ export default {
 						
 						const enabled_uris = res.body
 						
+						//console.log(enabled_uris)
+						
 						Array.each(uris, function (uri, index){
-					
+							
+							
 							//get vhost properties
 							this.$http.get('http://localhost:8081/nginx/vhosts/'+uri, {
 								headers : { "Content-Type": "application/json", "Accept": "application/json" },
 							}).then(function(res){
 								
+								
 								const data = res.body
+								
+								//console.log(uri)
+								//console.log(data)
 								
 								if(data instanceof Array){//uri has more than 1 vhost
 									total += data.length - 1
