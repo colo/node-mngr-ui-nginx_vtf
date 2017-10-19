@@ -44,4 +44,10 @@
   }
 </script>
 
+// main.styl
+// <style lang="stylus">
+//  @import './stylus/main'
+// </style>
+
+
 <style src="vuetify/dist/vuetify.min.css"></style>
