@@ -12,12 +12,14 @@
       ></v-text-field>
     </v-card-title>
     <v-data-table
+			ref="data"
       v-bind:headers="headers"
       v-bind:items="items"
       v-bind:search="search"
       v-bind:pagination.sync="pagination"
       :total-items="totalItems"
       :loading="loading"
+      hide-actions
       v-model="selected"
       item-key="id"
       select-all
@@ -36,6 +38,7 @@
         <td><v-switch v-model="props.item.enabled"></v-switch></td>
       </template>
     </v-data-table>
+    <v-pagination :total-visible="pagination.visible" v-model="pagination.page" @next="getDataFromApi"circle></v-pagination>
     <v-card-text style="height: 100px; position: relative">
 			<v-btn
 				absolute
@@ -54,13 +57,15 @@
 <script>
 export default {
   name: 'vhosts',
-    data () {
+	data () {
     return {
       search: '',
       totalItems: 0,
       items: [],
       loading: true,
-      pagination: {},
+      pagination: {
+				visible: 5
+      },
       selected: [],
       headers: [
         {
@@ -82,9 +87,22 @@ export default {
       ]
     }
   },
+  /*computed: {
+		length () {
+			return Math.floor(this.totalItems / 5)
+		}
+  },*/
+  computed: {
+		pages () {
+			console.log(this.pagination)
+			return this.pagination.rowsPerPage ? Math.ceil(this.items.length / this.pagination.rowsPerPage) : 0
+		}
+	},
   watch: {
     pagination: {
       handler () {
+				//console.log(this.$refs.data.$children[4])
+				
         this.getDataFromApi()
           .then(data => {
             this.items = data.items
@@ -94,8 +112,16 @@ export default {
       deep: true
     }
   },
+  /*mounted () {
+			console.log(this)
+			console.log(this.$refs)
+			console.log(this.$refs.data.$children[4].click)
+			console.log(this.$refs.data.$children[4].href)
+	},*/
   // commented because getDataFromApi es called on pagination.sync
   // mounted () {
+	//	this.$children[0].$children[1].$children[4].href = 'www.google.com'
+	//	console.log(this.$children[0].$children[1].$children[4])
   //  this.getDataFromApi()
   //    .then(data => {
   //      this.items = data.items
@@ -103,7 +129,11 @@ export default {
   //    })
   // },
   methods: {
+		nextPage () {
+			console.log('nextPage')
+		},
 		getDataFromApi () {
+			console.log('getDataFromApi')
       this.loading = true
       return new Promise((resolve, reject) => {
         const { sortBy, descending, page, rowsPerPage } = this.pagination
@@ -153,7 +183,7 @@ export default {
 				
 				
 				//get all vhosts
-				this.$http.get('http://localhost:8081/nginx/vhosts/?first=10', {
+				this.$http.get('http://localhost:8081/nginx/vhosts', {
 					headers : { "Content-Type": "application/json", "Accept": "application/json" },
 				}).then(function(res){
 					
