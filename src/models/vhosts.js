@@ -7,7 +7,9 @@ export default {
       visible: 5,
       items: [],
       loading: true,
-      pagination: {},
+      pagination: {
+				rowsPerPage: 10,
+			},
       selected: [],
       headers: [
         {
@@ -38,7 +40,7 @@ export default {
 		pages () {
 			console.log('--pages--')
 			console.log(this.pagination)
-			console.log(console.log(this.items.length))
+			console.log(this.items)
 			
 			return this.pagination.rowsPerPage ? Math.ceil(this.totalItems / this.pagination.rowsPerPage) : 0
 		}
@@ -89,11 +91,12 @@ export default {
       return new Promise((resolve, reject) => {
         const { sortBy, descending, page, rowsPerPage } = this.pagination
 				
-				this.getVhosts().then(items => {
+				this.getVhosts().then(vhosts => {
 					
-					const total = items.length
+					const total = vhosts.total
+					var items = vhosts.items
 					
-					if (this.pagination.sortBy) {
+					/*if (this.pagination.sortBy) {
 						items = items.sort((a, b) => {
 							const sortA = a[sortBy]
 							const sortB = b[sortBy]
@@ -108,11 +111,11 @@ export default {
 								return 0
 							}
 						})
-					}
+					}*/
 
-					if (rowsPerPage > 0) {
+					/*if (rowsPerPage > 0) {
 						items = items.slice((page - 1) * rowsPerPage, page * rowsPerPage)
-					}
+					}*/
 
 					setTimeout(() => {
 						this.loading = false
@@ -120,7 +123,7 @@ export default {
 							items,
 							total
 						})
-					}, 10000)
+					}, 1000)
 					
 				})
 				
@@ -135,9 +138,22 @@ export default {
 			
 			return new Promise((resolve, reject) => {
 				
+				//self.URI = window.location.protocol+'//'+window.location.host+window.location.pathname;
+				
+				this.$http.get('http://localhost:8080/nginx/vhosts/api', {
+					headers : { "Content-Type": "application/json", "Accept": "application/json" },
+				}).then(function(res){
+					
+					console.log(res.body);
+					resolve(res.body);
+					
+				}, function(res){
+					console.log('Error:');
+					console.log(res);
+				});
 				
 				//get all vhosts
-				this.$http.get('http://localhost:8081/nginx/vhosts', {
+				/*this.$http.get('http://localhost:8081/nginx/vhosts', {
 					headers : { "Content-Type": "application/json", "Accept": "application/json" },
 				}).then(function(res){
 					
@@ -272,9 +288,9 @@ export default {
 									items.push(vhost)
 								}
 								
-								/*console.log('---total---')
-								console.log(total)
-								console.log(items.length)*/
+								//console.log('---total---')
+								//console.log(total)
+								//console.log(items.length)
 								
 								if(items.length == total){
 									//console.log(items);
@@ -305,7 +321,7 @@ export default {
 					console.log(res);
 				});
 				
-				
+				*/
 			})
 			
       /*
