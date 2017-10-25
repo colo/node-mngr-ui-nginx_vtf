@@ -11,30 +11,83 @@
         v-model="search"
       ></v-text-field>
     </v-card-title>
+    
     <v-data-table
 			ref="data"
       v-bind:headers="headers"
       v-bind:items="items"
       v-bind:search="search"
       v-bind:pagination.sync="pagination"
+			:total-items="totalItems"
       :loading="loading"
       hide-actions
       v-model="selected"
       item-key="id"
       select-all
     >
+			<template slot="headers" slot-scope="props">
+				<tr>
+					<th>
+						<v-checkbox
+							primary
+							hide-details
+							@click.native="toggleAll"
+							:input-value="props.all"
+							:indeterminate="props.indeterminate"
+						></v-checkbox>
+					</th>
+					</th>
+				</tr>
+			</template>
       <template slot="items" slot-scope="props">
+				<tr v-if="props.item.sub_items" @click="props.expanded = !props.expanded">
+					<td>
+					</td>
+					<td class="text-xs-left">{{ props.item.uri }}</td>
+					<td class="text-xs-right"></td>
+					<td></td>
+        </tr>
+        
+        <tr :active="props.selected" @click="props.selected = !props.selected" v-if="!props.item.sub_items">
 				<td>
-          <v-checkbox
-            primary
-            hide-details
-            v-model="props.selected"
-          ></v-checkbox>
-        </td>
-        <td class="text-xs-left">{{ props.item.uri }}</td>
-        <td class="text-xs-right">{{ props.item.port }}</td>
-        <td><v-switch v-model="props.item.enabled"></v-switch></td>
+					<v-checkbox
+						primary
+						hide-details
+						:input-value="props.selected"
+					></v-checkbox>
+					</td>
+					<td class="text-xs-left">{{ props.item.uri }}</td>
+					<td class="text-xs-right">{{ props.item.port }}</td>
+					<td><v-switch v-model="props.item.enabled"></v-switch></td>
+				</tr>
       </template>
+      
+      
+      <template slot="expand" slot-scope="props">
+				<v-data-table
+					hide-actions
+					hide-headers
+					ref="data"
+					v-bind:items="props.item.sub_items"
+
+				>
+				<template slot="items" slot-scope="sub_item_props">
+					<tr :active="props.selected" @click="props.selected = !props.selected">
+							<td>
+								<v-checkbox
+									primary
+									hide-details
+									:input-value="props.selected"
+								></v-checkbox>
+							</td>
+							<td class="text-xs-left">{{ sub_item_props.item.uri }}</td>
+							<td class="text-xs-right">{{ sub_item_props.item.port }}</td>
+							<td><v-switch v-model="sub_item_props.item.enabled"></v-switch></td>
+					</tr>
+				</template>
+				</v-data-table>
+				
+			</template>
     </v-data-table>
     <v-pagination
 			v-model="pagination.page"

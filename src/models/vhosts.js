@@ -39,8 +39,8 @@ export default {
   computed: {
 		pages () {
 			console.log('--pages--')
-			console.log(this.pagination)
-			console.log(this.items)
+			//console.log(this.pagination)
+			//console.log(this.items)
 			
 			return this.pagination.rowsPerPage ? Math.ceil(this.totalItems / this.pagination.rowsPerPage) : 0
 		}
@@ -49,13 +49,13 @@ export default {
     pagination: {
       handler () {
 				console.log('--pagination--')
-				console.log(this.pagination)
 						
         this.getDataFromApi()
-          .then(data => {
-						this.items = data.items
-            this.totalItems = data.total
-          })
+				.then(data => {
+					this.items = data.items
+					this.totalItems = data.total
+				})
+
       },
       deep: true
     }
@@ -75,6 +75,11 @@ export default {
 		//})
 	//},
   methods: {
+		toggleAll () {
+			console.log('---toggleAll---')
+			if (this.selected.length) this.selected = []
+			else this.selected = this.items.slice()
+		},
 		prevPage () {
 			console.log('prevPage:')
 		},
@@ -134,13 +139,18 @@ export default {
     getVhosts () {
 			console.log('getVhosts')
 			
-			const items = []
+			//const items = []
 			
 			return new Promise((resolve, reject) => {
 				
 				//self.URI = window.location.protocol+'//'+window.location.host+window.location.pathname;
+				const { sortBy, descending, page, rowsPerPage } = this.pagination
+				console.log(sortBy);
+				console.log(descending);
+				console.log(page);
+				console.log(rowsPerPage);
 				
-				this.$http.get('http://localhost:8080/nginx/vhosts/api', {
+				this.$http.get('http://localhost:8080/nginx/vhosts/api/?sort='+sortBy+'&descending='+descending+'&page='+page+'&rows='+rowsPerPage, {
 					headers : { "Content-Type": "application/json", "Accept": "application/json" },
 				}).then(function(res){
 					
