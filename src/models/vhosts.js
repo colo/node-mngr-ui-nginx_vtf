@@ -11,6 +11,7 @@ export default {
 				rowsPerPage: 10,
 			},
       selected: [],
+      selected_sub: [],
       headers: [
         {
           text: 'Uri',
@@ -77,8 +78,23 @@ export default {
   methods: {
 		toggleAll () {
 			console.log('---toggleAll---')
-			if (this.selected.length) this.selected = []
-			else this.selected = this.items.slice()
+			const self = this
+			if (this.selected.length) {
+				this.selected = []
+			}
+			else {
+				this.selected = this.items.slice()
+				this.items.forEach(function(item) {
+						if(item.sub_items)
+						item.sub_items.forEach(function(sub_item) {
+							self.selected.push(sub_item)
+						});
+				});
+			}
+		},
+		toggle_sub (event) {
+			console.log('---toggle_sub---')
+			console.log(event.target)
 		},
 		prevPage () {
 			console.log('prevPage:')

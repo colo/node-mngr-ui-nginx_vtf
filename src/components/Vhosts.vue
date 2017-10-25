@@ -48,7 +48,7 @@
 					<td></td>
         </tr>
         
-        <tr :active="props.selected" @click="props.selected = !props.selected" v-if="!props.item.sub_items">
+        <tr :active="props.selected" @click="props.selected = !props.selected" v-else>
 				<td>
 					<v-checkbox
 						primary
@@ -69,15 +69,18 @@
 					hide-headers
 					ref="data"
 					v-bind:items="props.item.sub_items"
-
+					v-model="selected"
+					item-key="id"
+					select-all
 				>
 				<template slot="items" slot-scope="sub_item_props">
-					<tr :active="props.selected" @click="props.selected = !props.selected">
+					<tr :active="sub_item_props.selected_sub" @click="sub_item_props.selected = !sub_item_props.selected">
 							<td>
 								<v-checkbox
 									primary
 									hide-details
-									:input-value="props.selected"
+									:input-value="sub_item_props.selected"
+									@click.native="toggle_sub"
 								></v-checkbox>
 							</td>
 							<td class="text-xs-left">{{ sub_item_props.item.uri }}</td>
