@@ -31,16 +31,25 @@
 						<v-checkbox
 							primary
 							hide-details
-							@click.native="toggleAll"
+							@click.native="toggle_all"
 							:input-value="props.all"
 							:indeterminate="props.indeterminate"
 						></v-checkbox>
 					</th>
-					</th>
+					<th v-for="header in props.headers" :key="header.text"
+          :class="[header.sortable === false ? '' : 'column sortable',
+          (pagination.descending && header.sortable !== false) ? 'desc' : 'asc',
+          header.value === pagination.sortBy ? 'active' : '',
+          'text-xs-'+header.align]"
+          @click="header.sortable !== false ? changeSort(header.value) : ''"
+        >
+          <v-icon v-if="header.sortable !== false">arrow_upward</v-icon>
+          {{ header.text }}
+        </th>
 				</tr>
 			</template>
       <template slot="items" slot-scope="props">
-				<tr v-if="props.item.sub_items" @click="props.expanded = !props.expanded">
+				<tr v-if="props.item.sub_items" :active="props.selected" @click="props.expanded = !props.expanded">
 					<td>
 					</td>
 					<td class="text-xs-left">{{ props.item.uri }}</td>
@@ -48,8 +57,8 @@
 					<td></td>
         </tr>
         
-        <tr :active="props.selected" @click="props.selected = !props.selected" v-else>
-				<td>
+        <tr v-else>
+				<td :active="props.selected" @click="props.selected = !props.selected">
 					<v-checkbox
 						primary
 						hide-details
@@ -67,20 +76,20 @@
 				<v-data-table
 					hide-actions
 					hide-headers
-					ref="data"
+					ref="sub_data"
 					v-bind:items="props.item.sub_items"
 					v-model="selected"
 					item-key="id"
-					select-all
 				>
 				<template slot="items" slot-scope="sub_item_props">
-					<tr :active="sub_item_props.selected_sub" @click="sub_item_props.selected = !sub_item_props.selected">
+					<!-- <tr :active="props.selected" @click="props.selected = !props.selected"> -->
+					<tr>
 							<td>
 								<v-checkbox
 									primary
 									hide-details
 									:input-value="sub_item_props.selected"
-									@click.native="toggle_sub"
+									@click.native="toggle_sub(sub_item_props.item, props.item)"
 								></v-checkbox>
 							</td>
 							<td class="text-xs-left">{{ sub_item_props.item.uri }}</td>

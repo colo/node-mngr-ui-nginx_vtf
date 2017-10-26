@@ -8,10 +8,11 @@ export default {
       items: [],
       loading: true,
       pagination: {
-				rowsPerPage: 10,
+				rowsPerPage: 5,
+				sortBy: 'uri',
+				//descending: true
 			},
       selected: [],
-      selected_sub: [],
       headers: [
         {
           text: 'Uri',
@@ -47,13 +48,20 @@ export default {
 		}
 	},
   watch: {
+		selected: function () {
+      console.log('--selected---')
+      this.selected.forEach(function(item) {
+				console.log(item.id)
+			});
+      //console.log(this.selected)
+    },
     pagination: {
       handler () {
 				console.log('--pagination--')
 						
         this.getDataFromApi()
 				.then(data => {
-					this.items = data.items
+					this.items = (this.pagination.descending) ? data.items.reverse() : data.items
 					this.totalItems = data.total
 				})
 
@@ -76,8 +84,16 @@ export default {
 		//})
 	//},
   methods: {
-		toggleAll () {
-			console.log('---toggleAll---')
+		changeSort (column) {
+			if (this.pagination.sortBy === column) {
+				this.pagination.descending = !this.pagination.descending
+			} else {
+				this.pagination.sortBy = column
+				this.pagination.descending = false
+			}
+		},
+		toggle_all () {
+			//console.log('---toggle_all---')
 			const self = this
 			if (this.selected.length) {
 				this.selected = []
@@ -85,16 +101,78 @@ export default {
 			else {
 				this.selected = this.items.slice()
 				this.items.forEach(function(item) {
-						if(item.sub_items)
-						item.sub_items.forEach(function(sub_item) {
-							self.selected.push(sub_item)
-						});
+						if(item.sub_items){
+							item.sub_items.forEach(function(sub_item) {
+								self.selected.push(sub_item)
+							});
+						}
+						//else{
+							//self.selected.push(item)
+						//}
 				});
 			}
+			
+			console.log(this.selected);
 		},
-		toggle_sub (event) {
+		toggle_sub (sub_item, item) {
 			console.log('---toggle_sub---')
-			console.log(event.target)
+			const sub_item_index = this.selected.indexOf(sub_item);
+			var item_index = this.selected.indexOf(item);
+			
+			if( sub_item_index == -1 ){
+				this.selected.push(sub_item);
+				
+				if( item_index == -1 )//if we added the sub_item & item not found, add
+					this.selected.push(item);
+					
+				//if we add the sub_item, we add the item only if all other item.sub_item are found
+				//var found = 0;
+				//item.sub_items.forEach(function(sub) {
+					
+					//if(found >= 0){
+						//found = this.selected.indexOf(sub);
+					//}
+					
+					//console.log('sub....'+found);
+						
+				//}.bind(this));
+				
+				//if(found > 0){//no sub_item found
+					//console.log('all found....');
+					//this.selected.push(item)
+				//}
+			}
+			else{
+				this.selected.splice(sub_item_index, 1);
+				
+				/*if( item_index > -1 )//if we added the sub_item & item not found, add
+					this.selected.splice(item_index, 1);*/
+					
+				//if we remove the sub_item, we remove the item only if no other item.sub_item found
+				var found = -1;
+				item.sub_items.forEach(function(sub) {
+					
+					if(found == -1){
+						found = this.selected.indexOf(sub);
+					}
+					
+					console.log('sub....'+found);
+						
+				}.bind(this));
+				
+				if(found == -1){//no sub_item found
+					console.log('not found....');
+					item_index = this.selected.indexOf(item);
+					this.selected.splice(item_index, 1);
+				}
+			}
+			
+			console.log(this.selected);
+			console.log(sub_item)
+			console.log(item)
+			//this.selected.push(sub_item)
+			//console.log(this.selected);
+			//return true
 		},
 		prevPage () {
 			console.log('prevPage:')
