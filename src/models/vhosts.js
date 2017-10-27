@@ -8,9 +8,10 @@ export default {
       items: [],
       loading: true,
       pagination: {
-				rowsPerPage: 5,
+				rowsPerPage: (this.$route.query.rowsPerPage || 5).toInt(),
 				sortBy: 'uri',
-				//descending: true
+				descending: JSON.parse(this.$route.query.descending || false),
+				page: (this.$route.query.page || 1).toInt(),
 			},
       selected: [],
       headers: [
@@ -45,7 +46,19 @@ export default {
 			//console.log(this.items)
 			
 			return this.pagination.rowsPerPage ? Math.ceil(this.totalItems / this.pagination.rowsPerPage) : 0
+		},
+		all_toogled (){
+			var length = this.items.length
+			
+			this.items.forEach(function(item) {
+					if(item.sub_items)
+						length += item.sub_items.length
+			});
+			
+			return (this.selected.length == length) ? true : false
+				
 		}
+		
 	},
   watch: {
 		selected: function () {
@@ -61,6 +74,13 @@ export default {
 						
         this.getDataFromApi()
 				.then(data => {
+					//this.items = (this.pagination.descending) ? data.items.reverse() : data.items
+					data.items.sort(function(a, b){
+						if(a.uri < b.uri) return -1;
+						if(a.uri > b.uri) return 1;
+						return 0;
+					});
+							
 					this.items = (this.pagination.descending) ? data.items.reverse() : data.items
 					this.totalItems = data.total
 				})
@@ -84,6 +104,16 @@ export default {
 		//})
 	//},
   methods: {
+		update_route () {
+			const { sortBy, descending, page, rowsPerPage } = this.pagination
+			this.$router.push({ path: 'vhosts', query: {
+					sortBy: sortBy,
+					descending: descending,
+					page: page,
+					rowsPerPage: rowsPerPage
+				}
+			})
+		},
 		changeSort (column) {
 			if (this.pagination.sortBy === column) {
 				this.pagination.descending = !this.pagination.descending
@@ -91,12 +121,16 @@ export default {
 				this.pagination.sortBy = column
 				this.pagination.descending = false
 			}
+			
+			this.update_route()
+			
 		},
 		toggle_all () {
 			//console.log('---toggle_all---')
 			const self = this
 			if (this.selected.length) {
 				this.selected = []
+				//this.all_toogled = false
 			}
 			else {
 				this.selected = this.items.slice()
@@ -110,49 +144,38 @@ export default {
 							//self.selected.push(item)
 						//}
 				});
+				
+				//this.all_toogled = true
 			}
 			
 			console.log(this.selected);
 		},
 		toggle_sub (sub_item, item) {
 			console.log('---toggle_sub---')
-			const sub_item_index = this.selected.indexOf(sub_item);
-			var item_index = this.selected.indexOf(item);
+			console.log(this.all_toogled);
+			
+			var sub_item_index = this.selected.indexOf(sub_item);
+			var item_index = 0;
 			
 			if( sub_item_index == -1 ){
+				/*if(this.selected.length > 0){//at least one toogled
+					this.selected.push(sub_item);
+				}
+				else{
+					this.selected.push(sub_item);
+					
+				}*/
+				
 				this.selected.push(sub_item);
 				
-				if( item_index == -1 )//if we added the sub_item & item not found, add
+				if( this.selected.indexOf(item) == -1 )//if we added the sub_item & item not found, add
 					this.selected.push(item);
 					
 				//if we add the sub_item, we add the item only if all other item.sub_item are found
-				//var found = 0;
-				//item.sub_items.forEach(function(sub) {
-					
-					//if(found >= 0){
-						//found = this.selected.indexOf(sub);
-					//}
-					
-					//console.log('sub....'+found);
-						
-				//}.bind(this));
-				
-				//if(found > 0){//no sub_item found
-					//console.log('all found....');
-					//this.selected.push(item)
-				//}
-			}
-			else{
-				this.selected.splice(sub_item_index, 1);
-				
-				/*if( item_index > -1 )//if we added the sub_item & item not found, add
-					this.selected.splice(item_index, 1);*/
-					
-				//if we remove the sub_item, we remove the item only if no other item.sub_item found
-				var found = -1;
+				/*var found = 0;
 				item.sub_items.forEach(function(sub) {
 					
-					if(found == -1){
+					if(found >= 0){
 						found = this.selected.indexOf(sub);
 					}
 					
@@ -160,29 +183,67 @@ export default {
 						
 				}.bind(this));
 				
-				if(found == -1){//no sub_item found
-					console.log('not found....');
-					item_index = this.selected.indexOf(item);
-					this.selected.splice(item_index, 1);
+				if(found > 0){//no sub_item found
+					console.log('all found....');
+					this.selected.push(item)
+				}*/
+			}
+			else{
+				
+				if( this.all_toogled ){//remove the sub_item & item found, remove
+					console.log('removing...')
+					sub_item_index = this.selected.indexOf(sub_item);
+					this.selected.splice(sub_item_index, 1);
+				
+					item_index = this.selected.indexOf(item)
+					if(item_index > -1)
+						this.selected.splice(this.selected.indexOf(item), 1);
 				}
+				else{//remove the sub_item, we remove the item only if no other item.sub_item found
+					sub_item_index = this.selected.indexOf(sub_item);
+					this.selected.splice(sub_item_index, 1);
+					
+					var found = -1;
+					item.sub_items.forEach(function(sub) {
+						
+						if(found == -1){
+							found = this.selected.indexOf(sub);
+						}
+						
+						console.log('sub....'+found);
+							
+					}.bind(this));
+					
+					if(found == -1){//no sub_item found
+						console.log('not found....');
+						//item_index = this.selected.indexOf(item);
+						this.selected.splice(this.selected.indexOf(item), 1);
+					}
+				}
+				
+				
 			}
 			
-			console.log(this.selected);
+			console.log('this.all_toogled');
+			console.log(this.all_toogled);
+			/*console.log(this.selected);
 			console.log(sub_item)
-			console.log(item)
-			//this.selected.push(sub_item)
-			//console.log(this.selected);
-			//return true
+			console.log(item)*/
+			
 		},
-		prevPage () {
+		/*prevPage () {
 			console.log('prevPage:')
+			this.update_route()
 		},
 		nextPage () {
 			console.log('nextPage')
+			//console.log(this.$router)
+			this.update_route()
 		},
 		numPage () {
 			console.log('numPage')
-		},
+			this.update_route()
+		},*/
 		getDataFromApi () {
 			console.log('getDataFromApi')
 			

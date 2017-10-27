@@ -105,9 +105,9 @@
 			v-model="pagination.page"
 			:total-visible="visible"
 			:length="pages"
-			@previous="prevPage"
-			@next="nextPage"
-			@input="numPage"
+			@previous="update_route"
+			@next="update_route"
+			@input="update_route"
 			circle></v-pagination>
     <v-card-text style="height: 100px; position: relative">
 			<v-btn
