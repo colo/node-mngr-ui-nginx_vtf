@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+	<v-card>
     <v-card-title>
       Virtual Hosts
       <v-spacer></v-spacer>
@@ -8,15 +8,13 @@
         label="Search"
         single-line
         hide-details
-        v-model="search"
+        @keyup.enter="search"
       ></v-text-field>
     </v-card-title>
-    
     <v-data-table
 			ref="data"
       v-bind:headers="headers"
       v-bind:items="items"
-      v-bind:search="search"
       v-bind:pagination.sync="pagination"
 			:total-items="totalItems"
       :loading="loading"
@@ -54,7 +52,10 @@
 					</td>
 					<td class="text-xs-left">{{ props.item.uri }}</td>
 					<td class="text-xs-right"></td>
-					<td></td>
+					<td class="text-xs-left">
+						<v-icon v-if="!props.expanded">arrow_downward</v-icon>
+						<v-icon v-else>arrow_upward</v-icon>
+					</td>
         </tr>
         
         <tr v-else>
@@ -105,10 +106,12 @@
 			v-model="pagination.page"
 			:total-visible="visible"
 			:length="pages"
+			circle></v-pagination>
+			<!--
 			@previous="update_route"
 			@next="update_route"
 			@input="update_route"
-			circle></v-pagination>
+			-->
     <v-card-text style="height: 100px; position: relative">
 			<v-btn
 				absolute
