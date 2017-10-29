@@ -92,7 +92,7 @@ export default {
 					//this.totalItems = data.total
 				//})
 		//},
-		search (){
+		search (event){
 			console.log('search on api:'+event.target.value);
 			
 			if(event.target.value.length >= 3 || event.target.value.length == 0){//0 = clean search
