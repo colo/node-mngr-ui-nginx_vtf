@@ -1,5 +1,5 @@
 <template>
-	<v-card>
+	<v-card v-if="$route.path == '/vhosts'">
     <v-card-title>
       Virtual Hosts
       <v-spacer></v-spacer>
@@ -125,6 +125,14 @@
 			</v-btn>
 		</v-card-text>
   </v-card>
+  <!-- show children (vhosts/:uri) -->
+  <v-card v-else>
+		<transition>
+			<keep-alive>
+				<router-view></router-view>
+			</keep-alive>
+		</transition>
+		</v-card>
 </template>
 
 <script src='../models/vhosts.js'></script>

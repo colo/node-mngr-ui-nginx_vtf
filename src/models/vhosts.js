@@ -56,6 +56,10 @@ export default {
 		
 	},
   watch: {
+		/*'$route' (to, from) {
+      console.log('---vhosts route---')
+      
+    },*/
 		selected: function () {
       console.log('--selected---')
       this.selected.forEach(function(item) {
@@ -83,6 +87,22 @@ export default {
 			//this.totalItems = data.total
 		//})
 	//},
+	/*beforeRouteEnter (to, from, next) {
+		console.log('--beforeRouteEnter to:')
+		console.log(to)
+		console.log('--beforeRouteEnter from:')
+		console.log(from)
+		
+		next()
+  },
+  beforeRouteUpdate (to, from, next) {
+    console.log('--beforeRouteUpdate to:')
+		console.log(to)
+		console.log('--beforeRouteUpdate from:')
+		console.log(from)
+		
+		next()
+  },*/
   methods: {
 		//getData () {
 			
