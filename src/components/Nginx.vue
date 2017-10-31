@@ -60,7 +60,7 @@
 			return {
 				search: ''
 			}
-		},
+		}
   }
 </script>
 

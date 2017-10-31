@@ -35,13 +35,22 @@ export default new Router({
 					props: true,
 					children: [
 						{
-							path: ':uri',
+							path: ':uri/:id?',
 							name: 'vhost',
 							component: Vhost,
+							beforeEnter: (to, from, next) => {
+								to.meta.text = to.params.uri
+								to.meta.to = to.path
+								/*console.log('beforeEnter')
+								console.log(to)
+								console.log(from)
+								console.log(this)*/
+								next()
+							},
 							meta: {
-								text: 'Virtual Host',
+								//text: 'Virtual Host',
 								append: true,
-								to: '/vhosts',
+								//to: '/vhosts',
 								exact:true,
 								disabled: false
 							},

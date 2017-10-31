@@ -50,7 +50,9 @@
 				<tr v-if="props.item.sub_items" :active="props.selected" @click="props.expanded = !props.expanded">
 					<td>
 					</td>
-					<td class="text-xs-left">{{ props.item.uri }}</td>
+					<td class="text-xs-left">
+						{{ props.item.uri }}
+					</td>
 					<td class="text-xs-right"></td>
 					<td class="text-xs-left">
 						<v-icon v-if="!props.expanded">arrow_downward</v-icon>
@@ -66,7 +68,10 @@
 						:input-value="props.selected"
 					></v-checkbox>
 					</td>
-					<td class="text-xs-left">{{ props.item.uri }}</td>
+					<td class="text-xs-left">
+						<!--{{ props.item.uri }}-->
+						<router-link v-bind:to="'vhosts/'+props.item.uri">{{props.item.uri}}</router-link>
+					</td>
 					<td class="text-xs-right">{{ props.item.port }}</td>
 					<td><v-switch v-model="props.item.enabled"></v-switch></td>
 				</tr>
@@ -93,7 +98,13 @@
 									@click.native="toggle_sub(sub_item_props.item, props.item)"
 								></v-checkbox>
 							</td>
-							<td class="text-xs-left">{{ sub_item_props.item.uri }}</td>
+							<td class="text-xs-left">
+								<!--{{ sub_item_props.item.id }}-->
+								<router-link
+								 v-bind:to="'vhosts/'+sub_item_props.item.uri+'/'+sub_item_props.item.id.split('_')[1]">
+								 {{sub_item_props.item.uri}}
+								</router-link>
+							</td>
 							<td class="text-xs-right">{{ sub_item_props.item.port }}</td>
 							<td><v-switch v-model="sub_item_props.item.enabled"></v-switch></td>
 					</tr>
