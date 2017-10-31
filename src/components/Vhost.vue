@@ -1,28 +1,14 @@
 <template>
-	<p>{{ uri }}</p>
+  <v-expansion-panel focusable >
+    <v-expansion-panel-content v-for="(value,property) in item" :key="property" >
+      <div slot="header">{{property}}</div>
+      <v-card>
+        <v-card-text class="grey lighten-3">
+        {{value}}
+        </v-card-text>
+      </v-card>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
-
-<script>
-  export default {
-		props: ['uri'],
-    data () {
-			return {
-				
-			}
-		},
-		/*beforeRouteEnter (to, from, next) {
-			next(vm => {
-				// access to component instance via `vm`
-				vm.$route.meta.text = vm.$route.params.uri
-				console.log(vm.$route)
-			})
-		},
-		beforeRouteUpdate (to, from, next) {
-			console.log('beforeRouteUpdate')
-			console.log(this.$route)
-			next()
-		},*/
-  }
-</script>
-
+<script src='../models/vhost.js'></script>
