@@ -1,5 +1,6 @@
 <template>
-	<v-card v-if="$route.path == '/vhosts'">
+	<v-container grid-list-xl text-xs-center v-if="/^\/vhosts\/$/.test($route.path)">
+	<v-card>
     <v-card-title>
       Virtual Hosts
       <v-spacer></v-spacer>
@@ -70,7 +71,7 @@
 					</td>
 					<td class="text-xs-left">
 						<!--{{ props.item.uri }}-->
-						<router-link v-bind:to="'vhosts/'+props.item.uri">{{props.item.uri}}</router-link>
+						<router-link v-bind:to="'/vhosts/'+props.item.uri">{{props.item.uri}}</router-link>
 					</td>
 					<td class="text-xs-right">{{ props.item.port }}</td>
 					<td><v-switch v-model="props.item.enabled"></v-switch></td>
@@ -101,7 +102,7 @@
 							<td class="text-xs-left">
 								<!--{{ sub_item_props.item.id }}-->
 								<router-link
-								 v-bind:to="'vhosts/'+sub_item_props.item.uri+'/'+sub_item_props.item.id.split('_')[1]">
+								 v-bind:to="'/vhosts/'+sub_item_props.item.uri+'/'+sub_item_props.item.id.split('_')[1]">
 								 {{sub_item_props.item.uri}}
 								</router-link>
 							</td>
@@ -136,6 +137,7 @@
 			</v-btn>
 		</v-card-text>
   </v-card>
+  </v-container>
   <!-- show children (vhosts/:uri) -->
   <v-card v-else>
 		<transition>
@@ -143,7 +145,8 @@
 				<router-view></router-view>
 			</keep-alive>
 		</transition>
-		</v-card>
+	</v-card>
+	
 </template>
 
 <script src='../models/vhosts.js'></script>

@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel focusable >
+	<advanced v-if="advanced_view" v-bind:uri="uri"
+	:value="item"
+	></advanced>
+  <v-expansion-panel focusable v-else>
     <v-expansion-panel-content v-for="(value,property) in item" :key="property" >
       <div slot="header">{{property}}</div>
       <v-card>

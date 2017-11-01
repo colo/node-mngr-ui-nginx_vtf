@@ -80,13 +80,13 @@ export default {
     }
   },
   // commented because getDataFromApi es called on pagination.sync
-	//mounted () {
-	//this.getDataFromApi()
-		//.then(data => {
-			//this.items = data.items
-			//this.totalItems = data.total
-		//})
-	//},
+	/*mounted () {
+		this.getDataFromApi()
+			.then(data => {
+				this.items = data.items
+				this.totalItems = data.total
+			})
+	},*/
 	/*beforeRouteEnter (to, from, next) {
 		console.log('--beforeRouteEnter to:')
 		console.log(to)
@@ -94,8 +94,8 @@ export default {
 		console.log(from)
 		
 		next()
-  },
-  beforeRouteUpdate (to, from, next) {
+  },*/
+  /*beforeRouteUpdate (to, from, next) {
     console.log('--beforeRouteUpdate to:')
 		console.log(to)
 		console.log('--beforeRouteUpdate from:')
@@ -134,7 +134,7 @@ export default {
 			console.log(this.pagination);
 			
 			const { sortBy, descending, page, rowsPerPage, search } = this.pagination
-			this.$router.push({ path: 'vhosts', query: {
+			this.$router.push({ path: '/vhosts/', query: {
 					sortBy: sortBy,
 					descending: descending,
 					page: page,
@@ -361,7 +361,10 @@ export default {
 				
 				this.update_route();
 				this.$http.get('http://localhost:8080/nginx/vhosts/api/?sort='+sortBy+'&descending='+descending+'&page='+page+'&rows='+rowsPerPage+'&search='+search, {
-					headers : { "Content-Type": "application/json", "Accept": "application/json" },
+					"Content-Type": "application/json",
+					"Accept": "application/json",
+					"Cache-Control": "no-store",
+					"Cache-Control": "no-cache, no-store, must-revalidate"
 				}).then(function(res){
 					
 					console.log(res.body);

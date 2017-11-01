@@ -34,9 +34,11 @@
 		</v-toolbar>
 		<main>
       <v-content>
+<!--
         <v-container grid-list-xl text-xs-center>
 					<v-layout row wrap>
 						<v-flex xs10 offset-xs1>
+-->
             <!-- <v-layout column align-center> -->
               <transition>
 								<keep-alive>
@@ -44,11 +46,13 @@
 								</keep-alive>
 							</transition>
             <!-- </v-layout> -->
+<!--
 						</v-flex>
 					</v-layout>
         </v-container>
+-->	
       </v-content>
-		
+	
     </main>
     <v-footer app></v-footer>
 	</v-app>

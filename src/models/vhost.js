@@ -1,10 +1,17 @@
+import advanced from '@/components/vhost/advanced'
+
 export default {
 	name: 'vhost',
 	props: ['uri', 'id'],
 	
+	components: {
+		'advanced': advanced,
+	},
+	
 	data () {
 		return {
 			item: {},
+			advanced_view: true,
 		}
 	},
 	mounted () {
@@ -130,3 +137,4 @@ export default {
 		next()
 	},*/
 }
+

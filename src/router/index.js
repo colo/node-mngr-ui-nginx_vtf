@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Nginx from '@/components/Nginx'
 import Vhosts from '@/components/Vhosts'
 import Vhost from '@/components/Vhost'
+//const Vhost = () => import('../components/Vhost') //lazy load
 
 Vue.use(Router)
 
@@ -22,13 +23,13 @@ export default new Router({
 			},
 			children: [
 				{
-					path: '/vhosts',
+					path: '/vhosts/',
 					name: 'vhosts',
 					component: Vhosts,
 					meta: {
 						text: 'Virtual Hosts',
 						append: true,
-						to: '/vhosts',
+						to: '/vhosts/',
 						exact:true,
 						disabled: false
 					},
@@ -41,10 +42,10 @@ export default new Router({
 							beforeEnter: (to, from, next) => {
 								to.meta.text = to.params.uri
 								to.meta.to = to.path
-								/*console.log('beforeEnter')
+								console.log('beforeEnter')
 								console.log(to)
 								console.log(from)
-								console.log(this)*/
+								console.log(this)
 								next()
 							},
 							meta: {
