@@ -59,7 +59,7 @@ app.use(history({
 	verbose: true,
 	rewrites: [
 		{
-				from: /^(?!.*app\.js).*$/,
+				from: /^(?!.*app\.js|\/static\/).*$/,
 				to: '/'
 		}
 	]

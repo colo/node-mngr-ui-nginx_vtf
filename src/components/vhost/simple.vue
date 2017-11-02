@@ -1,17 +1,3 @@
-<!--
-* https://www.npmjs.com/package/vue-json-editor
-+ https://www.npmjs.com/package/jsoneditor
-
-https://ace.c9.io/
-https://github.com/chairuosen/vue2-ace-editor
-https://github.com/dhenkes/vue2-ace
-
-
-
-
-schema:
-https://www.npmjs.com/package/json-editor
--->
 
 <template>
     <v-container grid-list-xl text-xs-center>
@@ -21,7 +7,7 @@ https://www.npmjs.com/package/json-editor
       <v-container fluid grid-list-md class="grey lighten-4">
         <v-layout row wrap>
           <v-flex>
-          <div id="jsoneditor"></div>
+          <div id="jsoneditor" style="width: 400px; height: 400px;"></div>
           
           <!--
           <vue-json-editor v-model="item" :showBtns="false" @json-change="onJsonChange"></vue-json-editor>
@@ -50,13 +36,18 @@ https://www.npmjs.com/package/json-editor
     </v-container>
 </template>
 
+
+
 <script>
 //import vueJsonEditor from 'vue-json-editor'
-import JSONEditor from 'jsoneditor/dist/jsoneditor.min.js'
-//import 'mootools'
+//import 'json-editor/dist/jsoneditor.js'
+import JSONEditor from 'json-editor/dist/jsoneditor.js'
+
+//import jQuery from 'jquery/dist/jquery.min.js'
+//import 'bootstrap'
 
 export default {
-  name: 'advanced',
+  name: 'simple',
   props: ['uri', 'id', 'value'],
 	components: {
 		//vueJsonEditor
@@ -76,7 +67,7 @@ export default {
 	watch: {
 		value: function (val) {
       //this.item = val
-      this.editor.set(val);
+      this.editor.setValue(val);
 			//this.editor.expandAll();
     },
 	},
@@ -84,18 +75,36 @@ export default {
 		console.log('---mounted---')
 			
 		var options = {
-			"mode": "tree",
-			"search": true,
-			"modes": ['tree', 'view', 'form', 'code'],
-			"indentation": 2
+			 theme: 'bootstrap3',
+			 iconlib: "bootstrap3",
+			 schema: {
+				type: "object",
+				title: "Virtual Host",
+				format: "tabs",
+				"properties": {
+					"listen": {
+						"type": "string",
+						"description": "Listen IP & Port",
+					},
+					"server_name": {
+						"type": "string",
+						"description": "URI",
+					},
+					"access_log": {
+						"type": "object",
+						"description": "Access Log",
+					}
+				}
+			}
 		};
 		
 		/*var options = {
 			"mode": "code",
 			"indentation": 2
 		};*/
-
-		this.editor = new JSONEditor(document.getElementById('jsoneditor'), options);
+		
+		//console.log(window.JSONEditor);
+		this.editor = new window.JSONEditor(document.getElementById('jsoneditor'), options);
 		//editor.set(this.item);
 		//editor.expandAll();
 
@@ -109,6 +118,12 @@ export default {
 
 </script>
 
-<style src="jsoneditor/dist/jsoneditor.css"></style>
+<!--<style src='jqueryui/jquery-ui.min.css'></style>-->
 
-<!-- <script src='../models/vhost.js'></script> -->
+<style src='bootstrap/dist/css/bootstrap.min.css'></style>
+
+
+<!--<script src='json-editor/dist/jsoneditor.js'></script>-->
+<!--<style src='json-editor/dist/jsoneditor.css'></style>-->
+
+

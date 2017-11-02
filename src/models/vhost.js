@@ -1,4 +1,5 @@
 import advanced from '@/components/vhost/advanced'
+import simple from '@/components/vhost/simple'
 
 
 export default {
@@ -6,13 +7,14 @@ export default {
 	props: ['uri', 'id'],
 	
 	components: {
-		'advanced': advanced
+		'advanced': advanced,
+		'simple': simple,
 	},
 	
 	data () {
 		return {
 			item: {},
-			advanced_view: true,
+			advanced_view: false,
 		}
 	},
 	mounted () {
