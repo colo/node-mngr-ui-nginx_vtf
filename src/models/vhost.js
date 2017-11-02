@@ -1,11 +1,12 @@
 import advanced from '@/components/vhost/advanced'
 
+
 export default {
 	name: 'vhost',
 	props: ['uri', 'id'],
 	
 	components: {
-		'advanced': advanced,
+		'advanced': advanced
 	},
 	
 	data () {
