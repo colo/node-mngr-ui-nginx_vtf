@@ -73,17 +73,29 @@ export default {
     },
 	},
 	mounted: function (){
+		
+		/**
+		* (re)enable bootrap before leaving the page
+		* */
+		const styles = document.getElementsByTagName('style');
+		
+		for (var i = 0, style; style = styles[i]; i++) {
+			if(style.innerText.match(/Bootstrap/ig))
+				style.disabled = false
+		}
+		
+		
 		console.log('---mounted---')
 			
 		var options = {
-			 theme: 'bootstrap3',
-			 iconlib: "bootstrap3",
-			 //"disable_collapse": true,
-			 "disable_edit_json": true,
-			 disable_array_delete_all_rows: true,
-			 //"expand_height": true,
-			 //grid_columns: 12,
-			 schema: {
+			theme: 'bootstrap3',
+			iconlib: "bootstrap3",
+			//"disable_collapse": true,
+			"disable_edit_json": true,
+			disable_array_delete_all_rows: true,
+			//"expand_height": true,
+			//grid_columns: 12,
+			schema: {
 				type: "object",
 				format: "grid",
 				title: "Virtual Host",
@@ -103,7 +115,7 @@ export default {
 						"items": {
 							"type": "object",
 							format: "grid",
-							"headerTemplate": "{{ self._value }}",
+							"//headerTemplate": "{{ self._value }}",
 							title: "location",
 							/*"id": "loc_item",
 							"properties": {
@@ -139,12 +151,15 @@ export default {
 					if(!row.tab) return;
 
 					if(refresh_headers) {
-						//console.log(row.getHeaderText());
-						if(row.getHeaderText().length > 15){
-							row.tab_text.textContent = row.getHeaderText().substr(0,10)+'...'+row.getHeaderText().substr(-5);
+						//console.log(row);
+						
+						const header = row.value._value;
+						
+						if(header.length > 15){
+							row.tab_text.textContent = header.substr(0,10)+'...'+header.substr(-5);
 						}
 						else{
-							row.tab_text.textContent = row.getHeaderText();
+							row.tab_text.textContent = header;
 						}
 					}
 					else {
@@ -171,13 +186,33 @@ export default {
 			}
 			
 		});
+		/*window.JSONEditor.defaults.editors.location = window.JSONEditor.AbstractEditor.extend({
+			
+			getHeaderText: function(){
+				const header = this._super();
+				console.log(header);
+				if(header.length > 15){
+					return header.substr(0,10)+'...'+header.substr(-5);
+				}
+				else{
+					return header;
+				}
+			}
+
+		});*/
+		
 		// Add a resolver function to the beginning of the resolver list 
 		// This will make it run before any other ones 
 		window.JSONEditor.defaults.resolvers.unshift(function(schema) {
 			if(schema.type === "array" && schema.format === "location") {
 				return "location";
 			}
-		 
+			
+			/*if(schema.type === "string" && schema.format === "location") {
+			console.log(schema);
+				return "location";
+			}*/
+			
 			// If no valid editor is returned, the next resolver function will be used 
 		});
 		this.editor = new window.JSONEditor(document.getElementById('jsoneditor'), options);
@@ -185,7 +220,22 @@ export default {
 		//editor.expandAll();
 
 		//var json = editor.get(json);
-	}
+	},
+	beforeDestroy () {
+		console.log('---beforeDestroy--')
+		/**
+		* disable bootrap before leaving the page
+		* */
+		const styles = document.getElementsByTagName('style');
+		
+		for (var i = 0, style; style = styles[i]; i++) {
+			if(style.innerText.match(/Bootstrap/ig))
+				style.disabled = true
+		}
+		
+		//console.log(typeOf(styles))
+		
+	},
 	/*beforeUpdate: function () {
 		console.log('created')
     this.item = this.value
@@ -197,6 +247,8 @@ export default {
 <!--<style src='jqueryui/jquery-ui.min.css'></style>-->
 
 <style src='bootstrap/dist/css/bootstrap.min.css'></style>
+
+<!--<style src='bootstrap-2.3.2/css/bootstrap.min.css'></style>-->
 
 
 <!--<script src='json-editor/dist/jsoneditor.js'></script>-->
