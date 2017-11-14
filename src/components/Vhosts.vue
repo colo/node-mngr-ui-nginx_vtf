@@ -125,16 +125,62 @@
 			@input="update_route"
 			-->
     <v-card-text style="height: 100px; position: relative">
-			<v-btn
+			<!-- if no vhost selected, show "add" button -->
+			<v-speed-dial
 				absolute
-				dark
-				fab
-				bottom
 				right
-				color="pink"
+				fab
+				v-if="selected.length == 0"
 			>
-				<v-icon>add</v-icon>
-			</v-btn>
+				<v-btn
+					slot="activator"
+					color="blue"
+					dark
+					fab
+					hover
+					v-model="speed_dial.fab"
+				>
+					<v-icon>add</v-icon>
+				</v-btn>
+			</v-speed-dial>
+			<!-- else, speed dial -->
+			<v-speed-dial
+				absolute
+				right
+				slide-y-reverse-transition
+				v-model="speed_dial.fab"
+				:transition="speed_dial.transition"
+				v-else
+			>
+				<v-btn
+					slot="activator"
+					color="blue"
+					dark
+					fab
+					hover
+					v-model="speed_dial.fab"
+				>
+					<v-icon>keyboard_arrow_up</v-icon>
+					<v-icon>close</v-icon>
+				</v-btn>
+				<v-btn
+					fab
+					dark
+					small
+					color="green"
+				>
+					<v-icon>edit</v-icon>
+				</v-btn>
+				<v-btn
+					fab
+					dark
+					small
+					color="red"
+				>
+					<v-icon>delete</v-icon>
+				</v-btn>
+			</v-speed-dial>
+			
 		</v-card-text>
   </v-card>
   </v-container>

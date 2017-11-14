@@ -6,6 +6,18 @@ export default {
       visible: 5,
       items: [],
       loading: true,
+      speed_dial: {
+				direction: "top",
+				fab: false,
+				fling: false,
+				hover: false,
+				tabs: null,
+				top: false,
+				right: true,
+				bottom: true,
+				left: false,
+				transition: 'slide-y-reverse-transition'
+			},
       pagination: {
 				rowsPerPage: (this.$route.query.rowsPerPage || 5).toInt(),
 				sortBy: 'uri',
