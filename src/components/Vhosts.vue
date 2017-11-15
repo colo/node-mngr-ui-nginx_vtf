@@ -131,6 +131,7 @@
 				right
 				fab
 				v-if="selected.length == 0"
+				@click.native="create"
 			>
 				<v-btn
 					slot="activator"
@@ -168,6 +169,7 @@
 					dark
 					small
 					color="green"
+					@click.native="edit"
 				>
 					<v-icon>edit</v-icon>
 				</v-btn>
@@ -176,6 +178,7 @@
 					dark
 					small
 					color="red"
+					@click.native="del"
 				>
 					<v-icon>delete</v-icon>
 				</v-btn>

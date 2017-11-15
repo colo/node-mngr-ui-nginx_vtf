@@ -116,6 +116,15 @@ export default {
 		next()
   },*/
   methods: {
+		create () {
+			console.log('----create---')
+		},
+		edit () {
+			console.log('----edit---')
+		},
+		del () {
+			console.log('----delete---')
+		},
 		//getData () {
 			
 			//this.getDataFromApi()
